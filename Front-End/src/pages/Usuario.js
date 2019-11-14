@@ -3,6 +3,32 @@ import Header from '../componentes/Header';
 import Rodape from '../componentes/Rodape';
 
 class Usuario extends Component {
+
+    constructor(props){
+        super(props);
+        this.state = {
+            listaUsuario : [],
+            nome : '',
+            email : '',
+            senha : '',
+            tipoUsuario : {
+                tipoUsuarioId : 0,
+                titulo : ''
+            }
+        }
+    }
+
+    buscarUsuarios(){
+        fetch('http://localhost:5000/api/usuarios')
+        .then(resposta => resposta.json())
+        .then(data => this.setState( {listaUsuario : data} ))
+        .catch((erro) => console.log(erro))
+    }
+
+    componentDidMount(){
+        this.buscarUsuarios();
+    }
+
     render() {
         return (
             <div>
@@ -24,38 +50,20 @@ class Usuario extends Component {
                                 </thead>
 
                                 <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Usuário A</td>
-                                        <td>a@a.a</td>
-                                        <td>ADMINISTRADOR</td>
-                                        <td>SP</td>
-                                        <td>Editar/Excluir</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Usuário B</td>
-                                        <td>b@b.b</td>
-                                        <td>COMUM</td>
-                                        <td>SP</td>
-                                        <td>Editar/Excluir</td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>Usuário C</td>
-                                        <td>c@c.c</td>
-                                        <td>ADMINISTRADOR</td>
-                                        <td>SP</td>
-                                        <td>Editar/Excluir</td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>Usuário D</td>
-                                        <td>d@d.d</td>
-                                        <td>ADMINISTRADOR</td>
-                                        <td>SP</td>
-                                        <td>Editar/Excluir</td>
-                                    </tr>
+                                    {
+                                        this.state.listaUsuario.map(function(usuario){
+                                            return (
+                                                <tr key={usuario.usuarioId}>
+                                                    <td>{usuario.usuarioId}</td>
+                                                    <td>{usuario.nome}</td>
+                                                    <td>{usuario.email}</td>
+                                                    <td>{usuario.tipoUsuario.titulo}</td>
+                                                    <td>SP</td>
+                                                    <td>Editar/Excluir</td>
+                                                </tr>                                               
+                                            )
+                                        })
+                                    }
                                 </tbody>
                             </table>
 

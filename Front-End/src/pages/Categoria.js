@@ -3,6 +3,30 @@ import Rodape from '../componentes/Rodape';
 import Header from '../componentes/Header';
 
 class Categoria extends Component {
+    
+    constructor(props){
+        super(props);
+        this.state = {
+            listaCategorias : [],
+            titulo : ''
+        }
+    }
+
+    
+    // Função que faz a requisição para a API
+    // Atribui os dados recebidos ao state listarCategorias
+    // Caso ocorra um erro, exibe no console do navegador
+    buscarCategorias(){
+        fetch('http://localhost:5000/api/categorias')
+        .then(resposta => resposta.json())
+        .then(data => this.setState( {listaCategorias : data} ))
+        .catch((erro) => console.log(erro))
+    }
+
+    componentDidMount(){
+        this.buscarCategorias();
+    }
+
     render() {
         return (
             <div>
@@ -19,7 +43,20 @@ class Categoria extends Component {
                                     </tr>
                                 </thead>
 
-                                <tbody id="tabela-lista-corpo"></tbody>
+                                <tbody id="tabela-lista-corpo">
+                                    { 
+                                        // Percorre o array listaCategorias e preenche o corpo da tabela, 
+                                        // com o Id e o Título de cada categoria.
+                                        this.state.listaCategorias.map(function(categoria){
+                                            return (
+                                                <tr key={categoria.categoriaId}>
+                                                    <td>{categoria.categoriaId}</td>
+                                                    <td>{categoria.titulo}</td>
+                                                </tr>
+                                            )
+                                        })
+                                    }
+                                </tbody>
                             </table>
                         </div>
 
@@ -34,11 +71,9 @@ class Categoria extends Component {
                                         id="nome-tipo-evento"
                                         placeholder="tipo do evento"
                                     />
-                                    <button
-                                        class="conteudoPrincipal-btn conteudoPrincipal-btn-cadastro"
-                                    >
+                                    <button class="conteudoPrincipal-btn conteudoPrincipal-btn-cadastro">
                                         Cadastrar
-                    </button>
+                                    </button>
                                 </div>
                             </form>
                         </div>

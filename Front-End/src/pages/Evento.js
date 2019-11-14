@@ -3,6 +3,33 @@ import Header from '../componentes/Header';
 import Rodape from '../componentes/Rodape'
 
 class Evento extends Component {
+
+    constructor(props){
+        super(props);
+        this.state = {
+            listaEvento : [],
+            titulo : '',
+            acessoLivre : true,
+            dataEvento : '',
+            categoria : {
+                categoriaId : 0,
+                titulo : ''
+            },
+            localizacao : ''
+        }
+    }
+
+    buscarEvento(){
+        fetch('http://localhost:5000/api/eventos')
+        .then(resposta => resposta.json())
+        .then(data => this.setState( {listaEvento : data} ))
+        .catch((erro) => console.log(erro))
+    }
+
+    componentDidMount(){
+        this.buscarEvento();
+    }
+
     render() {
         return (
             <div>
@@ -22,7 +49,21 @@ class Evento extends Component {
                                     </tr>
                                 </thead>
 
-                                <tbody id="tabela-lista-corpo"></tbody>
+                                <tbody id="tabela-lista-corpo">
+                                    {
+                                        this.state.listaEvento.map(function(evento){
+                                            return(
+                                                <tr key={evento.eventoId}>
+                                                    <td>{evento.eventoId}</td>
+                                                    <td>{evento.titulo}</td>
+                                                    <td>{evento.dataEvento}</td>
+                                                    <td>{evento.acessoLivre ? "Livre": "Restrito"}</td>
+                                                    <td>{evento.categoria.titulo}</td>
+                                                </tr>
+                                            )
+                                        })
+                                    }
+                                </tbody>
                             </table>
                         </div>
 
